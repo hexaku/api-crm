@@ -4,12 +4,14 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
@@ -17,8 +19,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     normalizationContext={
  *          "groups"={"customers_read"}
  *     },
- *     collectionOperations={"GET"},
- *     itemOperations={"GET", "DELETE"}
+ *     collectionOperations={"GET", "POST"},
+ *     itemOperations={"GET", "PUT", "DELETE"},
+ *     subresourceOperations={
+            "invoices_get_subresource"={"path"="/customers/{id}/invoices"}
+ *     }
  * )
  * @ApiFilter(SearchFilter::class, properties={"firstName":"partial", "lastName"})
  * @ApiFilter(OrderFilter::class)
@@ -36,18 +41,25 @@ class Customer
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read"})
+     * @Assert\NotBlank
+     * @Assert\Length(min="3", max="255")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read"})
+     * @Assert\NotBlank
+     * @Assert\Length(min="3", max="255")
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read"})
+     * @Assert\NotBlank
+     * @Assert\Email()
+     * @Assert\Length(max="255")
      */
     private $email;
 
@@ -60,12 +72,14 @@ class Customer
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Invoice", mappedBy="customer")
      * @Groups({"customers_read"})
+     * @ApiSubresource
      */
     private $invoices;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="customers")
      * @Groups({"customers_read"})
+     * @Assert\NotBlank
      */
     private $user;
 
