@@ -4,7 +4,7 @@
     <list default="true" id="f89bb4ec-9615-49ff-bf10-a3bb08a66ea7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/packages/security.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/security.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/User.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -179,7 +179,7 @@
       <workItem from="1582008907047" duration="7128000" />
       <workItem from="1582043330266" duration="1665000" />
       <workItem from="1582051451267" duration="5306000" />
-      <workItem from="1582094294590" duration="3100000" />
+      <workItem from="1582094294590" duration="4974000" />
     </task>
     <servers />
   </component>
