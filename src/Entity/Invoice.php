@@ -75,7 +75,6 @@ class Invoice
      * @ORM\Column(type="integer")
      * @Groups({"invoices_read", "customers_read", "invoices_subresource"})
      * @Assert\NotBlank()
-     * @Assert\Type(type="integer")
      */
     private $chrono;
 
