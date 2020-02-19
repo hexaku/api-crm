@@ -6,7 +6,7 @@ import '../css/app.css';
 console.log('Hello World !!!');
 
 const App = () => {
-    return <h1>Bonjour à tous BITCHES</h1>
+    return <h1>Bonjour à tous</h1>
 }
 
 const rootElement = document.querySelector('#app');
