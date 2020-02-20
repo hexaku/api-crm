@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import axios from 'axios';
 import Pagination from '../components/Pagination';
 import customersAPI from '../services/customersAPI';
 
@@ -9,36 +8,45 @@ const CustomersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
 
+  // Permet d'aller récuperer les customers
+  const fetchCustomers = async () => {
+    try {
+      const data = await customersAPI.findAll()
+      setCustomers(data);
+    } catch(error) {
+      console.log(error.response)
+    }
+  }
+
+  // Au chargement du composant, on va chercher les customers
   useEffect(() => {
-    customersAPI.findAll()
-    .then(data => setCustomers(data))
-    .catch(error => console.log(error.response));
+    fetchCustomers()
   }, []);
 
-  const handleDelete = id => {
-
+  // Gestion de la suppression d'un customer
+  const handleDelete = async id => {
     const originalCustomers = [...customers];
-
     setCustomers(customers.filter(customer => customer.id !== id));
 
-    customersAPI.delete(id)
-    .then(response => console.log("ok"))
-    .catch(error => {
+    try {
+      await customersAPI.delete(id)
+    } catch(error) {
       setCustomers(originalCustomers);
-      console.log(error.response);
-    })
+    }
   }
 
-  const handleChangePage = (page) => {
-    setCurrentPage(page);
-  }
+  // Gestion du changement de page
+  const handleChangePage = page => setCurrentPage(page);
 
+  // Gestion de la recherche
   const handleSearch = event => {
     setSearch(event.target.value);
     setCurrentPage(1);
   }
 
   const itemsPerPage = 10;
+
+  // Filtrage des customers en fonction de la recherche
   const filteredCustomers = 
     customers.filter(customer => 
       customer.firstName.toLowerCase().includes(search.toLowerCase()) || 
@@ -46,6 +54,8 @@ const CustomersPage = () => {
       customer.email.toLowerCase().includes(search.toLowerCase()) ||
       (customer.company && customer.company.toLowerCase().includes(search.toLowerCase()))
       );
+
+  // Pagination des données
   const paginatedCustomers = Pagination.getData(filteredCustomers, currentPage, itemsPerPage);
 
   return (
