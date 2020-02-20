@@ -37,7 +37,7 @@ const InvoicesPage = props => {
           </tr>
         </thead>
         <tbody>
-          {invoices.map(invoice => {
+          {invoices.map(invoice =>
             <tr key={invoice.id}>
               <td>{invoice.chrono}</td>
               <td>
@@ -47,13 +47,13 @@ const InvoicesPage = props => {
               <td className="text-center">
                 <span className="badge badge-success">{invoice.status}</span>
               </td>
-              <td className="text-center">{invoice.amount.toLocaleString("fr-FR")}</td>
+              <td className="text-center">{invoice.amount.toLocaleString("fr-FR")} €</td>
               <td>
                 <button className="btn btn-sm btn-primary mr-1">Modifier</button>
                 <button className="btn btn-sm btn-danger">Supprimer</button>
               </td>
             </tr>
-          })}
+          )}
         </tbody>
       </table>
     </Fragment>
