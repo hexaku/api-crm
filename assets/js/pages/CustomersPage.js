@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import Pagination from '../components/Pagination';
+import customersAPI from '../services/customersAPI';
 
 const CustomersPage = () => {
 
@@ -9,8 +10,7 @@ const CustomersPage = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/customers")
-    .then(response => (response.data["hydra:member"]))
+    customersAPI.findAll()
     .then(data => setCustomers(data))
     .catch(error => console.log(error.response));
   }, []);
@@ -21,7 +21,7 @@ const CustomersPage = () => {
 
     setCustomers(customers.filter(customer => customer.id !== id));
 
-    axios.delete("http://127.0.0.1:8000/api/customers/" + id)
+    customersAPI.delete(id)
     .then(response => console.log("ok"))
     .catch(error => {
       setCustomers(originalCustomers);
