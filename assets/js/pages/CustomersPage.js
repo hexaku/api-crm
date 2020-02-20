@@ -1,10 +1,12 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
+import Pagination from '../components/Pagination';
 
 const CustomersPage = () => {
 
   const [customers, setCustomers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/customers")
@@ -27,18 +29,37 @@ const CustomersPage = () => {
     })
   }
 
-  const itemsPerPage = 10;
-  const pagesCount = Math.ceil(customers.length/itemsPerPage);
-  const pages = [];
-
-  for(let i = 1; i <= pagesCount; i++){
-    pages.push(i);
+  const handleChangePage = (page) => {
+    setCurrentPage(page);
   }
-  console.log(pages);
+
+  const handleSearch = event => {
+    setSearch(event.target.value);
+    setCurrentPage(1);
+  }
+
+  const itemsPerPage = 10;
+  const filteredCustomers = 
+    customers.filter(customer => 
+      customer.firstName.toLowerCase().includes(search.toLowerCase()) || 
+      customer.lastName.toLowerCase().includes(search.toLowerCase()) ||
+      customer.email.toLowerCase().includes(search.toLowerCase()) ||
+      (customer.company && customer.company.toLowerCase().includes(search.toLowerCase()))
+      );
+  const paginatedCustomers = Pagination.getData(filteredCustomers, currentPage, itemsPerPage);
 
   return (
     <Fragment>
       <h1>Liste des clients</h1>
+
+      <div className="form-group">
+        <input 
+        className="form-control"
+        placeholder="Rechercher..."
+        onChange={handleSearch}
+        value={search}
+        />
+      </div>
 
       <table className="table table-hover">
         <thead>
@@ -53,7 +74,7 @@ const CustomersPage = () => {
           </tr>
         </thead>
         <tbody>
-          {customers.map(customer => <tr key={customer.id}>
+          {paginatedCustomers.map(customer => <tr key={customer.id}>
             <td>{customer.id}</td>
             <td><a href="#">{customer.firstName} {customer.lastName}</a></td>
             <td>{customer.email}</td>
@@ -73,21 +94,14 @@ const CustomersPage = () => {
           </tr>)}
         </tbody>
       </table>
-      <div>
-        <ul className="pagination pagination-sm">
-          <li className="page-item disabled">
-            <a className="page-link" href="#">&laquo;</a>
-          </li>
-          {pages.map(page => 
-            <li key={page} className={"page-item" + (currentPage === page && " active")}>
-              <a className="page-link" href="#">{page}</a>
-            </li>
-          )}
-          <li className="page-item">
-            <a className="page-link" href="#">&raquo;</a>
-          </li>
-        </ul>
-      </div>
+      {itemsPerPage < filteredCustomers.length && (
+        <Pagination 
+        currentPage={currentPage}
+        itemsPerPage={itemsPerPage}
+        length={filteredCustomers.length}
+        onChangePage={handleChangePage}
+        />
+      )}
     </Fragment>
   )
 }
