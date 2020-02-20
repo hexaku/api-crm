@@ -1,10 +1,25 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import Pagination from '../components/Pagination';
 import axios from 'axios';
+import moment from 'moment';
+
+const STATUS_CLASSES = {
+  PAID: "success",
+  SENT: "primary",
+  CANCELLED: "danger"
+};
+
+const STATUS_LABELS = {
+  PAID: "Payée",
+  SENT: "Envoyée",
+  CANCELLED: "Annulée"
+};
 
 const InvoicesPage = props => {
 
   const [invoices, setInvoices] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
 
   const fetchInvoices = async () => {
     try {
@@ -20,6 +35,22 @@ const InvoicesPage = props => {
   useEffect(() => {
     fetchInvoices();
   }, []);
+
+  // Gestion du changement de page
+  const handleChangePage = page => setCurrentPage(page);
+
+  // Gestion de la recherche
+  const handleSearch = event => {
+    setSearch(event.target.value);
+    setCurrentPage(1);
+  }
+
+  const itemsPerPage = 10;
+
+  const formatDate = (str) => moment(str).format('DD/MM/YYYY');
+
+  // Pagination des données
+  const paginatedInvoices = Pagination.getData(filteredInvoices, currentPage, itemsPerPage);
 
   return (
     <Fragment>
@@ -37,25 +68,32 @@ const InvoicesPage = props => {
           </tr>
         </thead>
         <tbody>
-          {invoices.map(invoice =>
+          {paginatedInvoices.map(invoice =>
             <tr key={invoice.id}>
               <td>{invoice.chrono}</td>
               <td>
                 <a href="#">{invoice.customer.firstName} {invoice.customer.lastName}</a>
                 </td>
-              <td className="text-center">{invoice.sentAt}</td>
+              <td className="text-center">{formatDate(invoice.sentAt)}</td>
               <td className="text-center">
-                <span className="badge badge-success">{invoice.status}</span>
+                <span className={"badge badge-" + STATUS_CLASSES[invoice.status]}>{STATUS_LABELS[invoice.status]}</span>
               </td>
               <td className="text-center">{invoice.amount.toLocaleString("fr-FR")} €</td>
               <td>
                 <button className="btn btn-sm btn-primary mr-1">Modifier</button>
-                <button className="btn btn-sm btn-danger">Supprimer</button>
+                <button className="btn btn-sm btn-danger">Supprimer</button> 
               </td>
             </tr>
           )}
         </tbody>
       </table>
+
+      <Pagination 
+      currentPage={currentPage}
+      itemsPerPage={itemsPerPage}
+      onChangePage={handleChangePage}
+      length={invoices.length}
+      />
     </Fragment>
   );
 }
