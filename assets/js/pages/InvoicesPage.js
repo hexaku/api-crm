@@ -2,6 +2,7 @@ import moment from 'moment';
 import React, { Fragment, useEffect, useState } from 'react';
 import Pagination from '../components/Pagination';
 import invoicesAPI from '../services/invoicesAPI';
+import { Link } from 'react-router-dom';
 
 const STATUS_CLASSES = {
   PAID: "success",
@@ -77,7 +78,10 @@ const InvoicesPage = () => {
 
   return (
     <Fragment>
-      <h1>Liste des factures</h1>
+      <div className="mb-4 d-flex justify-content-between align-items-center">
+        <h1>Liste des factures</h1>
+        <Link to="/invoices/new" className="btn btn-info">Créer une facture</Link>
+      </div>
 
       <div className="form-group">
         <input 
@@ -124,13 +128,14 @@ const InvoicesPage = () => {
           )}
         </tbody>
       </table>
-
+      {itemsPerPage < filteredInvoices.length && (
       <Pagination 
       currentPage={currentPage}
       itemsPerPage={itemsPerPage}
       onChangePage={handleChangePage}
       length={filteredInvoices.length}
       />
+      )}
     </Fragment>
   );
 }
