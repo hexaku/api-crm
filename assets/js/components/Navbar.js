@@ -1,4 +1,10 @@
 import React from 'react'
+import AuthAPI from '../services/authAPI';
+import authAPI from '../services/authAPI';
+
+const handleLogout = () => {
+  authAPI.logout();
+}
 
 const Navbar = () => {
   return (
@@ -29,9 +35,12 @@ const Navbar = () => {
             </a>
           </li>
           <li className="nav-item mx-1">
-            <a href="#" className="btn btn-danger">
-              Deconnexion
-            </a>
+            <button 
+            className="btn btn-danger"
+            onClick={handleLogout}
+            >
+              Déconnexion
+            </button>
           </li>
         </ul>
 

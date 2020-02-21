@@ -1,22 +1,30 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState } from 'react';
+import AuthAPI from '../services/authAPI';
 
 const LoginPage = props => {
   const [credentials, setCredentials] = useState({
     username: "",
     password: ""
   });
+  const [error, setError] = useState("");
 
-  const handleChange = event => {
-    const value = event.target.value;
-    const name = event.target.name;
+  // Gestion des champs
+  const handleChange = ({ target }) => {
+    const {value, name} = target;
 
     setCredentials({...credentials, [name]: value})
   }
 
-  const handleSubmit = event => {
+  // Gestion du submit
+  const handleSubmit = async event => {
     event.preventDefault();
 
-    console.log(credentials);
+    try {
+      await AuthAPI.authenticate(credentials);
+      setError("");
+    } catch(error) {
+      setError("Identifiants incorrects");
+    }
   }
 
 
@@ -30,12 +38,13 @@ const LoginPage = props => {
           <input 
           value={credentials.username}
           onChange={handleChange}
-          className="form-control"
+          className={"form-control" + (error && " is-invalid")}
           type="email"
           placeholder="Adresse email de connexion"
           name="username"
           id="username"
           />
+          {error && <p className="invalid-feedback">{error}</p>}
         </div>
         <div className="form-group">
           <label htmlFor="password">Mot de passe</label>
