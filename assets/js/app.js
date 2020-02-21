@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import '../css/app.css';
 import Navbar from './components/Navbar';
@@ -7,23 +7,32 @@ import { HashRouter, Switch, Route } from "react-router-dom";
 import CustomersPage from './pages/CustomersPage';
 import InvoicesPage from './pages/InvoicesPage';
 import LoginPage from './pages/LoginPage';
+import AuthAPI from './services/authAPI';
 
-console.log('Hello World !!!');
+AuthAPI.setup();
 
 const App = () => {
-    return (
-      <HashRouter>
-        <Navbar />
-          <main className="container pt-5">
-            <Switch>
-              <Route path="/login" component={LoginPage} />
-              <Route path="/customers" component={CustomersPage} />
-              <Route path="/invoices" component={InvoicesPage} />
-              <Route path="/" component={HomePage} />
-            </Switch>
-          </main>
-      </HashRouter>
-    );
+
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+
+  console.log(isAuthenticated);
+
+  return (
+    <HashRouter>
+      <Navbar isAuthenticated={isAuthenticated} onLogout={setIsAuthenticated} />
+        <main className="container pt-5">
+          <Switch>
+            <Route 
+            path="/login" 
+            render={(props) => <LoginPage onLogin={setIsAuthenticated}/>}
+            />
+            <Route path="/customers" component={CustomersPage} />
+            <Route path="/invoices" component={InvoicesPage} />
+            <Route path="/" component={HomePage} />
+          </Switch>
+        </main>
+    </HashRouter>
+  );
 };
 
 const rootElement = document.querySelector("#app");

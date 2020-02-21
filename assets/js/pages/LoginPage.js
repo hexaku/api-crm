@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import AuthAPI from '../services/authAPI';
 
-const LoginPage = props => {
+const LoginPage = ({ onLogin }) => {
   const [credentials, setCredentials] = useState({
     username: "",
     password: ""
@@ -13,7 +13,7 @@ const LoginPage = props => {
     const {value, name} = target;
 
     setCredentials({...credentials, [name]: value})
-  }
+  };
 
   // Gestion du submit
   const handleSubmit = async event => {
@@ -22,10 +22,11 @@ const LoginPage = props => {
     try {
       await AuthAPI.authenticate(credentials);
       setError("");
+      onLogin(true);
     } catch(error) {
       setError("Identifiants incorrects");
     }
-  }
+  };
 
 
   return (
