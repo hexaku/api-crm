@@ -1,6 +1,6 @@
+import moment from 'moment';
 import React, { Fragment, useEffect, useState } from 'react';
 import Pagination from '../components/Pagination';
-import moment from 'moment';
 import invoicesAPI from '../services/invoicesAPI';
 
 const STATUS_CLASSES = {
