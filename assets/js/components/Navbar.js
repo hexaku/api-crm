@@ -1,13 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import authAPI from '../services/authAPI';
 import { NavLink } from 'react-router-dom';
+import '../../css/Navbar.css';
+import AuthContext from '../contexts/AuthContext';
 
+const Navbar = ({ history}) => {
 
-const Navbar = ({ isAuthenticated, onLogout }) => {
+  const { isAuthenticated, setIsAuthenticated} = useContext(AuthContext);
 
   const handleLogout = () => {
     authAPI.logout();
-    onLogout(false);
+    setIsAuthenticated(false);
+    history.push("/login")
   }
 
   return (
@@ -38,9 +42,9 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
             </button>
           </li>
           :
-          <div>
+          <div className="flex-button">
           <li className="nav-item mx-1">
-            <NavLink to="/login" className="nav-link">
+            <NavLink to="/login" className="btn btn-info">
               Inscription
             </NavLink>
           </li>

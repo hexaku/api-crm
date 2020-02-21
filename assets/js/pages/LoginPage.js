@@ -1,7 +1,11 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import AuthAPI from '../services/authAPI';
+import AuthContext from '../contexts/AuthContext';
 
-const LoginPage = ({ onLogin }) => {
+const LoginPage = ({ history }) => {
+
+  const { setIsAuthenticated } = useContext(AuthContext);
+
   const [credentials, setCredentials] = useState({
     username: "",
     password: ""
@@ -22,7 +26,8 @@ const LoginPage = ({ onLogin }) => {
     try {
       await AuthAPI.authenticate(credentials);
       setError("");
-      onLogin(true);
+      setIsAuthenticated(true);
+      history.replace("/customers");
     } catch(error) {
       setError("Identifiants incorrects");
     }
@@ -54,6 +59,7 @@ const LoginPage = ({ onLogin }) => {
           onChange={handleChange}
           className="form-control"
           type="password"
+          autoComplete="on"
           placeholder="Mot de passe"
           name="password"
           id="password"
