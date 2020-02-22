@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Field from '../components/forms/Field';
 import CustomersAPI from '../services/customersAPI';
 import { toast } from 'react-toastify';
+import FormContentLoader from '../components/loaders/FormContentLoader';
 
 const CustomerPage = ({ match, history }) => {
 
@@ -23,12 +24,14 @@ const CustomerPage = ({ match, history }) => {
   });
 
   const [editing, setEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Récuperation du customer en fonction de l'identifiant
   const fetchCustomer = async id => {
     try {
       const {firstName, lastName, email, company} = await CustomersAPI.find(id);
       setCustomer({ firstName, lastName, email, company});
+      setLoading(false);
     } catch(error) {
       toast.error("Impossible de charger le client");
       history.replace("/customers");
@@ -38,6 +41,7 @@ const CustomerPage = ({ match, history }) => {
   // Chargement du customer si besoin au chargement du ocmposant ou au changement de l'identifiant
   useEffect(() => {
     if(id !== "new"){
+      setLoading(true);
       setEditing(true);
       fetchCustomer(id)
     }
@@ -79,8 +83,8 @@ const CustomerPage = ({ match, history }) => {
   return (
     <Fragment>
       {!editing && <h1>Création d'un client</h1> || <h1>Modification du client</h1>}
-
-      <form onSubmit={handleSubmit}>
+      {loading && <FormContentLoader />}
+      {!loading &&<form onSubmit={handleSubmit}>
         <Field
         name="lastName"
         label="Nom de famille"
@@ -118,7 +122,7 @@ const CustomerPage = ({ match, history }) => {
         <button className="btn btn-success">Enregistrer</button>
         <Link to="/customers" className="btn btn-link">Retour à la liste</Link>
       </div>
-      </form>
+      </form>}
     </Fragment>
   )
 }

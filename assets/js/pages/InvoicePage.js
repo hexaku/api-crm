@@ -5,6 +5,7 @@ import Select from '../components/forms/Select';
 import CustomersAPI from '../services/customersAPI';
 import InvoicesAPI from '../services/invoicesAPI';
 import { toast } from 'react-toastify';
+import FormContentLoader from '../components/loaders/FormContentLoader';
 
 const InvoicePage = ({history, match}) =>{
 
@@ -23,13 +24,14 @@ const InvoicePage = ({history, match}) =>{
     customer: "",
     status: ""
   });
+  const [loading, setLoading] = useState(true);
 
   // Récuperation des clients
   const fetchCustomers = async () => {
     try {
       const data = await CustomersAPI.findAll();
       setCustomers(data);
-
+      setLoading(false);
       if(!invoice.customer) setInvoice({...invoice, customer: data[0].id});
     } catch(error) {
       console.log(error.response)
@@ -42,6 +44,7 @@ const InvoicePage = ({history, match}) =>{
     try {
       const {amount, status, customer} = await InvoicesAPI.find(id);
       setInvoice({amount, status, customer: customer.id});
+      setLoading(false);
     } catch(error) {
       toast.error("Impossible de charger la facture demandée")
       history.replace("/invoices");
@@ -96,7 +99,8 @@ const InvoicePage = ({history, match}) =>{
   return (
     <Fragment>
       {editing && <h1>Modification d'une facture</h1> || <h1>Création d'une facture</h1>}
-      <form onSubmit={handleSubmit}>
+      {loading &&<FormContentLoader />}
+      {!loading && <form onSubmit={handleSubmit}>
         <Field
         name="amount"
         type="number"
@@ -139,7 +143,7 @@ const InvoicePage = ({history, match}) =>{
           </button>
           <Link to="/invoices" className="btn btn-link">Retour aux factures</Link>
         </div>
-      </form>
+      </form>}
     </Fragment>
   )
 }
