@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react'
 import Field from '../components/forms/Field';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import usersAPI from '../services/usersAPI';
 
 const RegisterPage = ({history}) => {
 
@@ -39,7 +40,7 @@ const RegisterPage = ({history}) => {
     }
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/users", user);
+      await usersAPI.register(user);
       setErrors({});
       history.replace("/login");
     } catch(error) {
