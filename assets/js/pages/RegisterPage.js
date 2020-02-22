@@ -3,6 +3,7 @@ import Field from '../components/forms/Field';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import usersAPI from '../services/usersAPI';
+import { toast } from 'react-toastify';
 
 const RegisterPage = ({history}) => {
 
@@ -29,6 +30,7 @@ const RegisterPage = ({history}) => {
     setUser({...user, [name]: value})
   };
 
+  // Gestion de la soumission
   const handleSubmit = async event => {
     event.preventDefault();
 
@@ -36,12 +38,14 @@ const RegisterPage = ({history}) => {
     if(user.password !== user.passwordConfirm){
       apiErrors.passwordConfirm = "Passwords aren't the same";
       setErrors(apiErrors);
+      toast.error("Il y a des erreurs dans votre formulaire !")
       return;
     }
 
     try {
       await usersAPI.register(user);
       setErrors({});
+      toast.info("Vous êtes désormais inscrit, vous pouvez vous connecter")
       history.replace("/login");
     } catch(error) {
       console.log(error.response);
@@ -54,6 +58,7 @@ const RegisterPage = ({history}) => {
         });
         setErrors(apiErrors);
       }
+      toast.error("Il y a des erreurs dans votre formulaire !")
     }
   }
 
