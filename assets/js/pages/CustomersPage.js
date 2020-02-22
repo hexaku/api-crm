@@ -98,7 +98,7 @@ const CustomersPage = () => {
         {!loading && <tbody>
           {paginatedCustomers.map(customer => <tr key={customer.id}>
             <td>{customer.id}</td>
-            <td><a href="#">{customer.firstName} {customer.lastName}</a></td>
+            <td><Link to={"/customers/" + customer.id}>{customer.firstName} {customer.lastName}</Link></td>
             <td>{customer.email}</td>
             <td>{customer.company}</td>
             <td className="text-center">
