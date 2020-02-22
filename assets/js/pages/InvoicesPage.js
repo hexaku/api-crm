@@ -116,7 +116,7 @@ const InvoicesPage = () => {
               </td>
               <td className="text-center">{invoice.amount.toLocaleString("fr-FR")} €</td>
               <td>
-                <button className="btn btn-sm btn-primary mr-1">Modifier</button>
+                <Link to={"/invoices/" + invoice.id} className="btn btn-sm btn-primary mr-1">Modifier</Link>
                 <button
                 className="btn btn-sm btn-danger"
                 onClick={() => handleDelete(invoice.id)}
