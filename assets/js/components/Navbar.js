@@ -44,7 +44,7 @@ const Navbar = ({ history}) => {
           :
           <div className="flex-button">
           <li className="nav-item mx-1">
-            <NavLink to="/login" className="btn btn-info">
+            <NavLink to="/register" className="btn btn-info">
               Inscription
             </NavLink>
           </li>

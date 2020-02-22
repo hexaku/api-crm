@@ -1,9 +1,9 @@
-import React, { Component, Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Field from '../components/forms/Field';
 import Select from '../components/forms/Select';
-import { Link } from 'react-router-dom';
 import CustomersAPI from '../services/customersAPI';
-import axios from 'axios';
+import InvoicesAPI from '../services/invoicesAPI';
 
 const InvoicePage = ({history, match}) =>{
 
@@ -23,6 +23,7 @@ const InvoicePage = ({history, match}) =>{
     status: ""
   });
 
+  // Récuperation des clients
   const fetchCustomers = async () => {
     try {
       const data = await CustomersAPI.findAll();
@@ -31,26 +32,26 @@ const InvoicePage = ({history, match}) =>{
       if(!invoice.customer) setInvoice({...invoice, customer: data[0].id});
     } catch(error) {
       console.log(error.response)
+      history.replace("/invoices");
     }
   }
 
   const fetchInvoice = async id => {
     try {
-      const data = 
-      await axios
-        .get("http://127.0.0.1:8000/api/invoices/" + id)
-        .then(response => response.data);
-      const {amount, status, customer} = data;
+      const {amount, status, customer} = await InvoicesAPI.find(id);
       setInvoice({amount, status, customer: customer.id});
     } catch(error) {
-      console.log(error.response)
+      console.log(error.response);
+      history.replace("/invoices");
     }
   };
 
+  // Récuperation de la liste des clients à chaque chargement du composant
   useEffect(() => {
     fetchCustomers();
   }, []);
 
+  // Récuperation de la bonne facture quand l'identifiant de l'URL change
   useEffect(() => {
     if(id !== "new") {
       setEditing(true);
@@ -64,20 +65,15 @@ const InvoicePage = ({history, match}) =>{
     setInvoice({...invoice, [name]: value})
   }
 
+  // Gestion de la soumission du formulaire
   const handleSubmit = async event => {
     event.preventDefault();
 
     try {
       if(editing) {
-        const response = await axios.put("http://127.0.0.1:8000/api/invoices/" + id,
-        {...invoice, customer: `/api/customers/${invoice.customer}`})
-        console.log(response);
+        await InvoicesAPI.update(id, invoice);
       }else{
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/invoices",{
-            ...invoice,
-            customer: `/api/customers/${invoice.customer}`
-          });
+        const response = await InvoicesAPI.create(invoice);
           history.replace("/invoices");
       }
     } catch({ response }) {
@@ -91,7 +87,6 @@ const InvoicePage = ({history, match}) =>{
       }
     }
   }
-
 
   return (
     <Fragment>

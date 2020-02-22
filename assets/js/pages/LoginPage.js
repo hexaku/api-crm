@@ -2,6 +2,7 @@ import React, { Fragment, useState, useContext } from 'react';
 import AuthAPI from '../services/authAPI';
 import AuthContext from '../contexts/AuthContext';
 import Field from '../components/forms/Field';
+import { Link } from 'react-router-dom';
 
 const LoginPage = ({ history }) => {
 
@@ -56,6 +57,7 @@ const LoginPage = ({ history }) => {
         />
         <div className="form-group">
           <button className="btn btn-success">Connexion</button>
+          <Link to="/register" className="btn btn-link">Pas de compte ? S'inscrire</Link>
         </div>
       </form>
     </Fragment>
