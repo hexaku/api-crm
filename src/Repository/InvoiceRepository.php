@@ -22,6 +22,7 @@ class InvoiceRepository extends ServiceEntityRepository
 
     public function findLastChrono(User $user)
     {
+      try {
         return $this->createQueryBuilder("i")
             ->select("i.chrono")
             ->join("i.customer", "c")
@@ -31,6 +32,9 @@ class InvoiceRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getSingleScalarResult();
+      } catch(\Exception $e){
+        return 1;
+      }
     }
 
 
