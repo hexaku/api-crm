@@ -2,7 +2,7 @@
 
 ![](api-crm1.png)
 
-**API-CRM** is an interface to manage your for each customer, their invoices by being able to create, modify or delete them.
+**API-CRM** is an interface to manage your customers and their invoices. You are able to create/read/update/delete a customer or an invoice.
 
 You can create an account to get access to customers and invoices (you'll need to create them).
 
