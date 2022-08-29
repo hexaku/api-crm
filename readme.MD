@@ -12,6 +12,3 @@ ___
 
 This CRM is built with **Symfony** and communicate with an API REST built with **API-Platform**, the front-end is made with **React** and **Axios** to fetch datas.
 
-## Try this app
-
-**To access the app** : https://api-crm-akuserukid.herokuapp.com/#/
